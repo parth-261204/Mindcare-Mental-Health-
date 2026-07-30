@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { WELCOME_MESSAGE } from '../lib/chatbotResponses';
 import { askChatbot, startVoiceInput } from '../lib/chatApi';
+import { Link } from 'react-router-dom';
+
+const prompts = ['I feel stressed and do not know where to start.', 'How can I wind down before sleep?', 'When should I talk to a professional?'];
 
 export default function Chat() {
   const [messages, setMessages] = useState([
@@ -54,6 +57,7 @@ export default function Chat() {
         <p className="mt-1 text-gray-800 text-sm">
           Ask general questions about stress, anxiety, sleep, or when to seek help. This is informational only, not professional advice.
         </p>
+        <div className="mt-3 flex flex-wrap gap-2">{prompts.map((prompt) => <button key={prompt} onClick={() => setInput(prompt)} className="rounded-full bg-pink-100 px-3 py-1.5 text-xs font-medium text-gray-800 hover:bg-pink-200">{prompt}</button>)}</div>
       </div>
 
       <div className="flex-1 flex flex-col min-h-0 bg-white rounded-xl border border-pink-200 shadow-sm">
@@ -82,6 +86,7 @@ export default function Chat() {
                   <span className="w-2 h-2 rounded-full bg-pink-400 animate-bounce" style={{ animationDelay: '150ms' }} />
                   <span className="w-2 h-2 rounded-full bg-pink-400 animate-bounce" style={{ animationDelay: '300ms' }} />
                 </span>
+                <span className="ml-2 text-sm text-gray-700">Mindcare is thinking…</span>
               </div>
             </div>
           )}
@@ -115,7 +120,7 @@ export default function Chat() {
               Send
             </button>
           </div>
-          <p className="mt-2 text-xs text-gray-700">AI responses are informational only. In crisis, use the helpline numbers in the footer.</p>
+          <p className="mt-2 text-xs text-gray-700">AI responses are informational only, not emergency care. <Link to="/support" className="font-medium underline">Get urgent support now</Link> if you may harm yourself or cannot stay safe.</p>
           {voiceError && <p className="mt-1 text-xs text-red-600">{voiceError}</p>}
         </form>
       </div>

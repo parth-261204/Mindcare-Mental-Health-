@@ -6,6 +6,8 @@ import Questionnaire from './pages/Questionnaire';
 import Chat from './pages/Chat';
 import Login from './pages/Login';
 import Articles from './pages/Articles';
+import Support from './pages/Support';
+import Privacy from './pages/Privacy';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
             <Route path="questionnaire" element={<Questionnaire />} />
             <Route path="chat" element={<Chat />} />
             <Route path="articles" element={<Articles />} />
+            <Route path="support" element={<Support />} />
+            <Route path="privacy" element={<Privacy />} />
             <Route path="login" element={<Login />} />
           </Route>
         </Routes>

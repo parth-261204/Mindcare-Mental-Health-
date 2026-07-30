@@ -33,7 +33,7 @@ export default function Layout() {
             </Link>
             <span className="flex items-center gap-3">
               <Link to="/questionnaire" className="text-gray-800 hover:text-black font-medium transition-colors">
-                Questionnaire
+                Check-in
               </Link>
               <Link to="/chat" className="text-gray-800 hover:text-black font-medium transition-colors">
                 Chatbot
@@ -102,6 +102,10 @@ export default function Layout() {
       </main>
       <footer className="border-t border-pink-200 bg-pink-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="mb-8 rounded-xl border border-rose-200 bg-white p-5 sm:flex sm:items-center sm:justify-between">
+            <div><h2 className="font-semibold text-black">Need urgent help?</h2><p className="mt-1 text-sm text-gray-700">If you may harm yourself or cannot stay safe, contact emergency services or a crisis line now.</p></div>
+            <Link to="/support" className="mt-4 inline-flex rounded-lg bg-rose-500 px-4 py-2 font-medium text-white hover:bg-rose-600 sm:mt-0">Get urgent support</Link>
+          </div>
           <h2 className="text-lg font-semibold text-black mb-4">Helpline numbers</h2>
           <p className="text-gray-800 text-sm mb-6 max-w-2xl">
             If you or someone you know is in distress, please reach out to these organizations. They offer confidential support.
@@ -141,6 +145,7 @@ export default function Layout() {
           <p className="text-gray-700 text-sm mt-8">
             © Mindcare. This site is for informational purposes. In a crisis, please contact a helpline or emergency services.
           </p>
+          <Link to="/privacy" className="mt-2 inline-block text-sm font-medium text-gray-700 underline hover:text-black">Privacy & safety</Link>
         </div>
       </footer>
     </div>

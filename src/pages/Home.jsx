@@ -1,148 +1,25 @@
 import { Link } from 'react-router-dom';
 
 const recoveryImages = [
-  {
-    id: 1,
-    src: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80',
-    alt: 'Mindfulness and meditation',
-    caption: 'Finding calm',
-  },
-  {
-    id: 2,
-    src: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80',
-    alt: 'Person in nature',
-    caption: 'Reconnecting',
-  },
-  {
-    id: 3,
-    src: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&q=80',
-    alt: 'Yoga and wellness',
-    caption: 'Moving forward',
-  },
-  {
-    id: 4,
-    src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80',
-    alt: 'Support and connection',
-    caption: 'Together',
-  },
-  {
-    id: 5,
-    src: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=600&q=80',
-    alt: 'Peaceful morning',
-    caption: 'New beginnings',
-  },
-  {
-    id: 6,
-    src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80',
-    alt: 'Quiet reflection',
-    caption: 'Self-care',
-  },
+  'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80',
+  'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80',
+  'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&q=80',
+  'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80',
 ];
 
-const articles = [
-  {
-    id: 1,
-    title: 'Understanding anxiety and simple coping strategies',
-    excerpt: 'Learn what anxiety is, why it happens, and evidence-based ways to manage daily worry and physical symptoms.',
-    category: 'Anxiety',
-    slug: 'understanding-anxiety',
-  },
-  {
-    id: 2,
-    title: 'Sleep and mental health: why rest matters',
-    excerpt: 'How sleep affects mood, focus, and resilience, and practical steps to improve your sleep routine.',
-    category: 'Wellness',
-    slug: 'sleep-mental-health',
-  },
-  {
-    id: 3,
-    title: 'Building resilience in difficult times',
-    excerpt: 'Ways to strengthen your emotional resilience and adapt to stress and change in a healthy way.',
-    category: 'Resilience',
-    slug: 'building-resilience',
-  },
-  {
-    id: 4,
-    title: 'When to seek professional help',
-    excerpt: 'Signs that talking to a therapist or doctor could help, and how to take the first step.',
-    category: 'Support',
-    slug: 'seeking-professional-help',
-  },
-  {
-    id: 5,
-    title: 'Mindfulness and grounding techniques',
-    excerpt: 'Simple exercises to stay present, reduce overwhelm, and calm your nervous system.',
-    category: 'Mindfulness',
-    slug: 'mindfulness-grounding',
-  },
-  {
-    id: 6,
-    title: 'Managing low mood and motivation',
-    excerpt: 'Understanding low mood, small steps that help, and when it might be more than a rough patch.',
-    category: 'Mood',
-    slug: 'managing-low-mood',
-  },
+const nextSteps = [
+  ['Check in with yourself', 'A short adaptive check-in can help you notice patterns and decide on a practical next step.', '/questionnaire', 'Start check-in'],
+  ['Talk it through', 'Ask general questions about stress, sleep, low mood, relationships, or finding professional support.', '/chat', 'Open chat'],
+  ['Read trusted updates', 'Explore current mental-health reporting and research from curated sources.', '/articles', 'Browse articles'],
 ];
 
 export default function Home() {
-  return (
-    <>
-      <section className="relative overflow-hidden border-b border-pink-200 min-h-[28rem] sm:min-h-[32rem] flex items-center">
-        <div className="absolute inset-0 z-0">
-          <div className="flex h-full animate-scroll-vertical gap-0 w-max">
-            {[...recoveryImages, ...recoveryImages].map((img) => (
-              <div key={`${img.id}-${img.src}`} className="h-full w-[80vw] sm:w-[50vw] md:w-[40vw] flex-shrink-0">
-                <img src={img.src} alt="" aria-hidden className="h-full w-full object-cover" />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="absolute inset-0 z-[1] bg-pink-900/50" aria-hidden />
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 w-full">
-          <h1 className="text-3xl sm:text-4xl font-semibold text-white tracking-tight max-w-2xl drop-shadow-md">
-            Your space for mental wellness
-          </h1>
-          <p className="mt-4 text-white/95 max-w-xl text-lg drop-shadow-sm">
-            Access articles, understand your needs through a short questionnaire, and find support. You’re not alone.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link
-              to="/questionnaire"
-              className="inline-flex items-center justify-center rounded-lg bg-rose-400 text-white px-5 py-2.5 font-medium hover:bg-rose-500 transition-colors shadow-md"
-            >
-              Start questionnaire
-            </Link>
-            <Link
-              to="/articles"
-              className="inline-flex items-center justify-center rounded-lg border-2 border-white/90 bg-white/10 text-white px-5 py-2.5 font-medium hover:bg-white/20 backdrop-blur-sm transition-colors"
-            >
-              Browse latest articles
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section id="articles" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-2xl font-semibold text-black mb-2">Articles</h2>
-        <p className="text-gray-800 mb-8 max-w-2xl">
-          Evidence-based reads on mental health, coping, and when to seek help. Complete the questionnaire to get suggestions tailored to you.
-        </p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {articles.map((article) => (
-            <article
-              key={article.id}
-              className="bg-white rounded-xl border border-pink-200 p-6 hover:border-pink-300 hover:shadow-sm transition-all"
-            >
-              <span className="text-xs font-medium text-gray-700 uppercase tracking-wide">{article.category}</span>
-              <h3 className="mt-2 text-lg font-semibold text-black">{article.title}</h3>
-              <p className="mt-2 text-gray-800 text-sm leading-relaxed">{article.excerpt}</p>
-              <span className="mt-4 inline-block text-sm font-medium text-gray-700 hover:text-black">
-                Read more →
-              </span>
-            </article>
-          ))}
-        </div>
-      </section>
-    </>
-  );
+  return <>
+    <section className="relative flex min-h-[30rem] items-center overflow-hidden border-b border-pink-200">
+      <div className="absolute inset-0 z-0"><div className="flex h-full w-max animate-scroll-vertical">{[...recoveryImages, ...recoveryImages].map((src, index) => <img key={`${src}-${index}`} src={src} alt="" aria-hidden className="h-full w-[65vw] object-cover sm:w-[42vw]" />)}</div></div>
+      <div className="absolute inset-0 z-[1] bg-pink-900/55" aria-hidden />
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8"><p className="text-sm font-semibold text-pink-100">Mental wellbeing, one step at a time</p><h1 className="mt-2 max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-5xl">Your space to pause, reflect, and find support</h1><p className="mt-5 max-w-xl text-lg text-white/95">Mindcare offers general information and a supportive check-in—not a diagnosis or emergency service.</p><div className="mt-8 flex flex-wrap gap-4"><Link to="/questionnaire" className="rounded-lg bg-rose-400 px-5 py-3 font-medium text-white shadow-md hover:bg-rose-500">Start a wellbeing check-in</Link><Link to="/articles" className="rounded-lg border-2 border-white/90 bg-white/10 px-5 py-3 font-medium text-white backdrop-blur-sm hover:bg-white/20">Browse latest articles</Link></div><Link to="/support" className="mt-5 inline-block text-sm font-medium text-white underline underline-offset-4">Need urgent help now? Find support →</Link></div>
+    </section>
+    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8"><p className="text-sm font-semibold text-rose-600">Choose what feels right today</p><h2 className="mt-1 text-2xl font-semibold text-black">Your next step can be small</h2><p className="mt-2 max-w-2xl text-gray-800">Choose the option that matches what you need now. You do not need to have everything figured out.</p><div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{nextSteps.map(([title, description, to, action]) => <article key={title} className="rounded-xl border border-pink-200 bg-white p-6 transition-all hover:border-pink-300 hover:shadow-sm"><h3 className="text-lg font-semibold text-black">{title}</h3><p className="mt-2 text-sm leading-relaxed text-gray-800">{description}</p><Link to={to} className="mt-4 inline-block text-sm font-medium text-rose-600 hover:text-rose-700">{action} →</Link></article>)}</div></section>
+  </>;
 }

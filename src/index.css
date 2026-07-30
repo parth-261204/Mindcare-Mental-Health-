@@ -33,3 +33,9 @@ body {
 .animate-scroll-vertical {
   animation: scroll-flow 45s linear infinite;
 }
+
+:focus-visible { outline: 3px solid #fb7185; outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}
