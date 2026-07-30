@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Questionnaire from './pages/Questionnaire';
 import Chat from './pages/Chat';
 import Login from './pages/Login';
+import Articles from './pages/Articles';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="questionnaire" element={<Questionnaire />} />
             <Route path="chat" element={<Chat />} />
+            <Route path="articles" element={<Articles />} />
             <Route path="login" element={<Login />} />
           </Route>
         </Routes>

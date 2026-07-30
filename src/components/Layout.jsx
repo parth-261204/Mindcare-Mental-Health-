@@ -38,6 +38,9 @@ export default function Layout() {
               <Link to="/chat" className="text-gray-800 hover:text-black font-medium transition-colors">
                 Chatbot
               </Link>
+              <Link to="/articles" className="text-gray-800 hover:text-black font-medium transition-colors">
+                Articles
+              </Link>
             </span>
             {user ? (
               <div className="relative">
