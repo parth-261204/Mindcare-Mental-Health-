@@ -1,31 +1,43 @@
 import { useState, useRef, useEffect } from 'react';
-import { getBotResponse, WELCOME_MESSAGE } from '../lib/chatbotResponses';
+import { WELCOME_MESSAGE } from '../lib/chatbotResponses';
+import { askChatbot, startVoiceInput } from '../lib/chatApi';
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([{ role: 'bot', text: WELCOME_MESSAGE }]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef(null);
+  const messagePanelRef = useRef(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const panel = messagePanelRef.current;
+    if (panel) panel.scrollTo({ top: panel.scrollHeight, behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     const text = input.trim();
     if (!text || isLoading) return;
 
     setInput('');
-    setMessages((prev) => [...prev, { role: 'user', text }]);
+    const nextMessages = [...messages, { role: 'user', text }];
+    setMessages(nextMessages);
     setIsLoading(true);
-
-    setTimeout(() => {
-      const reply = getBotResponse(text);
+    try {
+      const reply = await askChatbot(nextMessages);
       setMessages((prev) => [...prev, { role: 'bot', text: reply }]);
+    } catch (error) {
+      setMessages((prev) => [...prev, { role: 'bot', text: `I couldn't answer that right now: ${error.message}` }]);
+    } finally {
       setIsLoading(false);
-    }, 400);
+    }
+  };
+
+  const handleVoiceInput = () => {
+    startVoiceInput({
+      onResult: (transcript) => setInput((current) => current ? `${current} ${transcript}` : transcript),
+      onError: () => {},
+    });
   };
 
   return (
@@ -67,7 +79,7 @@ export default function ChatWidget() {
             </svg>
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div ref={messagePanelRef} className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4">
           {messages.map((m, i) => (
             <div
               key={i}
@@ -95,7 +107,6 @@ export default function ChatWidget() {
               </div>
             </div>
           )}
-          <div ref={messagesEndRef} />
         </div>
         <form onSubmit={handleSend} className="p-4 border-t border-pink-200">
           <div className="flex gap-2">
@@ -107,6 +118,16 @@ export default function ChatWidget() {
               className="flex-1 rounded-lg border border-pink-300 px-4 py-2.5 text-black placeholder-pink-400 focus:border-pink-400 focus:outline-none focus:ring-1 focus:ring-pink-400 text-sm"
               disabled={isLoading}
             />
+            <button
+              type="button"
+              onClick={handleVoiceInput}
+              disabled={isLoading}
+              aria-label="Use voice input"
+              title="Use voice input"
+              className="rounded-lg border border-pink-300 px-3 py-2.5 text-rose-500 hover:bg-pink-50 disabled:opacity-50"
+            >
+              🎙️
+            </button>
             <button
               type="submit"
               disabled={!input.trim() || isLoading}

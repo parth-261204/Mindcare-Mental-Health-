@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { getBotResponse, WELCOME_MESSAGE } from '../lib/chatbotResponses';
+import { WELCOME_MESSAGE } from '../lib/chatbotResponses';
+import { askChatbot, startVoiceInput } from '../lib/chatApi';
 
 export default function Chat() {
   const [messages, setMessages] = useState([
@@ -7,35 +8,47 @@ export default function Chat() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef(null);
+  const [voiceError, setVoiceError] = useState('');
+  const messagePanelRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const panel = messagePanelRef.current;
+    if (panel) panel.scrollTo({ top: panel.scrollHeight, behavior: 'smooth' });
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isLoading]);
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     const text = input.trim();
     if (!text || isLoading) return;
 
     setInput('');
-    setMessages((prev) => [...prev, { role: 'user', text }]);
+    const nextMessages = [...messages, { role: 'user', text }];
+    setMessages(nextMessages);
     setIsLoading(true);
-
-    // Simulate a short delay, then use predefined responses (no API key)
-    setTimeout(() => {
-      const reply = getBotResponse(text);
+    try {
+      const reply = await askChatbot(nextMessages);
       setMessages((prev) => [...prev, { role: 'bot', text: reply }]);
+    } catch (error) {
+      setMessages((prev) => [...prev, { role: 'bot', text: `I couldn't answer that right now: ${error.message}` }]);
+    } finally {
       setIsLoading(false);
-    }, 400);
+    }
+  };
+
+  const handleVoiceInput = () => {
+    setVoiceError('');
+    startVoiceInput({
+      onResult: (transcript) => setInput((current) => current ? `${current} ${transcript}` : transcript),
+      onError: setVoiceError,
+    });
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col min-h-[calc(100vh-8rem)]">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col h-[calc(100vh-8rem)]">
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-black">Mental health chat</h1>
         <p className="mt-1 text-gray-800 text-sm">
@@ -44,7 +57,7 @@ export default function Chat() {
       </div>
 
       <div className="flex-1 flex flex-col min-h-0 bg-white rounded-xl border border-pink-200 shadow-sm">
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div ref={messagePanelRef} className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4">
           {messages.map((m, i) => (
             <div
               key={i}
@@ -72,7 +85,6 @@ export default function Chat() {
               </div>
             </div>
           )}
-          <div ref={messagesEndRef} />
         </div>
 
         <form onSubmit={handleSend} className="p-4 border-t border-pink-200">
@@ -86,6 +98,16 @@ export default function Chat() {
               disabled={isLoading}
             />
             <button
+              type="button"
+              onClick={handleVoiceInput}
+              disabled={isLoading}
+              aria-label="Use voice input"
+              title="Use voice input"
+              className="rounded-lg border border-pink-300 px-3 py-2.5 text-rose-500 hover:bg-pink-50 disabled:opacity-50"
+            >
+              🎙️
+            </button>
+            <button
               type="submit"
               disabled={!input.trim() || isLoading}
               className="rounded-lg bg-rose-400 text-white px-4 py-2.5 font-medium hover:bg-rose-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -93,9 +115,8 @@ export default function Chat() {
               Send
             </button>
           </div>
-          <p className="mt-2 text-xs text-gray-700">
-            No API key needed. Answers are predefined. In crisis, use the helpline numbers in the footer.
-          </p>
+          <p className="mt-2 text-xs text-gray-700">AI responses are informational only. In crisis, use the helpline numbers in the footer.</p>
+          {voiceError && <p className="mt-1 text-xs text-red-600">{voiceError}</p>}
         </form>
       </div>
     </div>
