@@ -42,11 +42,11 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Floating button - top-right corner */}
+      {/* Floating button stays clear of the mobile navigation. */}
       <button
         type="button"
         onClick={() => setIsOpen((o) => !o)}
-        className="fixed top-4 right-4 z-[60] flex items-center gap-2 rounded-full bg-rose-400 text-white px-4 py-2.5 font-medium shadow-lg hover:bg-rose-500 transition-colors"
+        className="fixed bottom-4 right-4 z-[60] flex items-center gap-2 rounded-full bg-rose-500 px-4 py-2.5 font-semibold text-white shadow-lg transition-colors hover:bg-rose-600 sm:bottom-6 sm:right-6"
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
         <span className="text-sm">Chatbot</span>

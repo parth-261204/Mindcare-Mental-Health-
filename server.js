@@ -14,6 +14,13 @@ app.use(cors({
 }));
 app.use(express.json());
 
+app.use((req, res, next) => {
+  if (req.method === 'GET' && req.path.startsWith('/api/')) {
+    res.set('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
+  }
+  next();
+});
+
 // Initialize Article Service
 const articles = new ArticleService({
   repository: new ArticleRepository(process.env.ARTICLES_DATABASE_PATH || resolve('data/articles.json')),

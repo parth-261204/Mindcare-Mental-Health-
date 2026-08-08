@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import ChatWidget from './ChatWidget';
 import { useAuth } from '../context/AuthContext';
 
@@ -7,6 +7,14 @@ export default function Layout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -21,29 +29,24 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-pink-50 text-black">
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <ChatWidget />
-      <header className="border-b border-pink-200 bg-white/90 backdrop-blur-sm sticky top-0 z-50">
-        <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link to="/" className="text-xl font-semibold text-black tracking-tight hover:text-gray-800 transition-colors">
+      <header className="border-b border-pink-200 bg-white/90 backdrop-blur-sm sticky top-0 z-50 glass" role="banner">
+        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Primary navigation">
+          <Link to="/" className="flex items-center gap-2 text-xl font-bold tracking-tight text-slate-900 transition-colors hover:text-rose-700" onClick={() => setMenuOpen(false)}>
+            <span aria-hidden="true" className="grid h-8 w-8 place-items-center rounded-xl bg-rose-500 text-lg text-white shadow-sm">♥</span>
             Mindcare
           </Link>
-          <div className="flex items-center gap-6">
-            <Link to="/" className="text-gray-800 hover:text-black font-medium transition-colors">
-              Home
-            </Link>
-            <span className="flex items-center gap-3">
-              <Link to="/questionnaire" className="text-gray-800 hover:text-black font-medium transition-colors">
-                Check-in
-              </Link>
-              <Link to="/chat" className="text-gray-800 hover:text-black font-medium transition-colors">
-                Chatbot
-              </Link>
-              <Link to="/articles" className="text-gray-800 hover:text-black font-medium transition-colors">
-                Articles
-              </Link>
-            </span>
+          <button type="button" className="rounded-lg p-2 text-slate-800 hover:bg-rose-50 md:hidden" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-controls="site-menu" aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}>
+            <span className="text-xl" aria-hidden="true">{menuOpen ? '×' : '☰'}</span>
+          </button>
+          <div id="site-menu" className={`${menuOpen ? 'flex' : 'hidden'} absolute inset-x-0 top-16 flex-col gap-1 border-b border-rose-100 bg-white p-4 shadow-lg md:static md:flex md:flex-row md:items-center md:gap-5 md:border-0 md:bg-transparent md:p-0 md:shadow-none`}>
+            <NavItem to="/" end label="Home" close={() => setMenuOpen(false)} />
+            <NavItem to="/questionnaire" label="Check-in" close={() => setMenuOpen(false)} />
+            <NavItem to="/chat" label="Chat" close={() => setMenuOpen(false)} />
+            <NavItem to="/articles" label="Articles" close={() => setMenuOpen(false)} />
             {user ? (
-              <div className="relative">
+              <div className="relative mt-2 border-t border-rose-100 pt-3 md:mt-0 md:border-0 md:pt-0">
                 <button
                   type="button"
                   onClick={() => setMenuOpen((o) => !o)}
@@ -69,7 +72,7 @@ export default function Layout() {
                       className="fixed inset-0 z-10"
                       onClick={() => setMenuOpen(false)}
                     />
-                    <div className="absolute right-0 mt-2 w-60 bg-white border border-pink-200 rounded-xl shadow-lg z-20 py-2">
+                    <div className="absolute right-0 mt-2 w-60 bg-white border border-pink-200 rounded-xl shadow-lg z-20 py-2" role="menu">
                       <div className="px-4 py-3 border-b border-pink-100">
                         <p className="text-sm font-semibold text-black truncate">{user.name}</p>
                         <p className="text-xs text-gray-500 truncate">{user.email}</p>
@@ -78,7 +81,7 @@ export default function Layout() {
                       <button
                         type="button"
                         onClick={handleLogout}
-                        className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-pink-50 transition-colors"
+                        className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-pink-50 transition-colors" role="menuitem"
                       >
                         Sign out
                       </button>
@@ -89,7 +92,8 @@ export default function Layout() {
             ) : (
               <Link
                 to="/login"
-                className="rounded-lg bg-rose-400 text-white px-4 py-2 text-sm font-medium hover:bg-rose-500 transition-colors"
+                className="mt-2 rounded-lg bg-rose-500 px-4 py-2 text-center text-sm font-semibold text-white shadow-sm transition-colors hover:bg-rose-600 md:mt-0"
+                onClick={() => setMenuOpen(false)}
               >
                 Login / Sign in
               </Link>
@@ -97,10 +101,10 @@ export default function Layout() {
           </div>
         </nav>
       </header>
-      <main className="flex-1">
+      <main id="main-content" className="flex-1" role="main" tabIndex="-1">
         <Outlet />
       </main>
-      <footer className="border-t border-pink-200 bg-pink-100">
+      <footer className="border-t border-pink-200 bg-pink-100" role="contentinfo">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="mb-8 rounded-xl border border-rose-200 bg-white p-5 sm:flex sm:items-center sm:justify-between">
             <div><h2 className="font-semibold text-black">Need urgent help?</h2><p className="mt-1 text-sm text-gray-700">If you may harm yourself or cannot stay safe, contact emergency services or a crisis line now.</p></div>
@@ -150,4 +154,8 @@ export default function Layout() {
       </footer>
     </div>
   );
+}
+
+function NavItem({ to, label, end, close }) {
+  return <NavLink to={to} end={end} onClick={close} className={({ isActive }) => `rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${isActive ? 'bg-rose-50 text-rose-700' : 'text-slate-700 hover:bg-rose-50 hover:text-rose-700'}`}>{label}</NavLink>;
 }
